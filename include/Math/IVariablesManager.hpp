@@ -13,7 +13,7 @@ namespace Nummy {
      public:
         virtual auto setVariable(const std::string& name, double value) -> void = 0;
         virtual auto getVariable(const std::string& name) -> double = 0;
-        ~IVariablesManager() {}
+        virtual ~IVariablesManager() {}
     };
 
 }  // namespace Nummy
