@@ -37,17 +37,9 @@ namespace Nummy {
 
             std::vector<Token> tokens = m_tokenizer->tokenize(expression, m_tokensManager->getTokens());
 
-            // for (auto token : tokens) {
-            //     std::cout << token << " ";
-            // }
-
             m_tree->build(tokens);
 
             m_out << m_tree->calculate() << std::endl;
-
-            // for (auto token : m_dictionary->getValidTokenList()) {
-            //     std::cout << token << " ";
-            // }
         }
     }
 
