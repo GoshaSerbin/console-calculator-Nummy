@@ -22,6 +22,7 @@ namespace Nummy {
             "\"Nummy\".";
 
         const std::string helpKey = "--help";
+        const std::string versionKey = "--version";
         const std::string inKey = "-i";
         const std::string outKey = "-o";
         const std::string expressionKey = "-e";
@@ -43,7 +44,11 @@ namespace Nummy {
 
         if (argc > 1 && argv[1] == helpKey) {
             out << helpMessage << std::endl;
-            out << "current version " << PROJECT_VERSION << std::endl;
+            return {};
+        }
+
+        if (argc > 1 && argv[1] == versionKey) {
+            out << PROJECT_VERSION << std::endl;
             return {};
         }
 
