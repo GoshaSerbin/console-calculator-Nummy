@@ -9,6 +9,7 @@ namespace Nummy {
 
     class CalculatorInitializer {
      public:
+        /// \return empty pointer if unable to make calculator
         auto makeCalculator(int argc, char** argv, std::ostream& out) -> std::unique_ptr<ICalculator>;
     };
 
