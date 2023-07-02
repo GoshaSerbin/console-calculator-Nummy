@@ -30,10 +30,10 @@ namespace Nummy {
             if (expression == exitCommand) {
                 break;
             }
-            // if (m_validator && !m_validator->isValid(expression, m_dictionary->getValidTokenList())) {
-            //     m_out << m_validator->getMessage() << std::endl;
-            //     continue;
-            // }
+            if (m_validator && !m_validator->isValid(expression, m_tokensManager->getTokens())) {
+                m_out << m_validator->getMessage() << std::endl;
+                continue;
+            }
 
             std::vector<Token> tokens = m_tokenizer->tokenize(expression, m_tokensManager->getTokens());
 
