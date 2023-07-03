@@ -6,7 +6,7 @@ namespace Nummy {
 
     class ExpressionValidator : public IExpressionValidator {
      public:
-        [[nodiscard]] auto isValid(const std::string& expression, const std::vector<Token>& validTokenList) -> bool override;
+        [[nodiscard]] auto isValid(std::string expression, const std::vector<Token>& validTokenList) -> bool override;
         [[nodiscard]] auto getMessage() const -> std::string override;
 
      private:

@@ -8,7 +8,7 @@ namespace Nummy {
 
     class IExpressionValidator {
      public:
-        virtual auto isValid(const std::string& expression, const std::vector<Token>& validTokenList) -> bool = 0;
+        virtual auto isValid(std::string expression, const std::vector<Token>& validTokenList) -> bool = 0;
         virtual auto getMessage() const -> std::string = 0;
         virtual ~IExpressionValidator() {}
     };

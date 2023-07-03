@@ -3,7 +3,9 @@
 
 namespace Nummy {
 
-    auto ExpressionValidator::isValid(const std::string& expression, const std::vector<Token>& validTokenList) -> bool {
+    auto ExpressionValidator::isValid(std::string expression, const std::vector<Token>& validTokenList) -> bool {
+        expression.erase(std::remove_if(expression.begin(), expression.end(), ::isspace), expression.end());
+
         if (!hasValidBracketSequence(expression)) {
             return false;
         }
@@ -35,7 +37,7 @@ namespace Nummy {
             }
         }
         if (bracketCounter > 0) {
-            m_message = "To many brackets in expression";
+            m_message = "To many  \'(\' brackets in expression";
             return false;
         }
         return true;
@@ -51,22 +53,26 @@ namespace Nummy {
 
     // incorrect algorithm
     auto ExpressionValidator::hasCorrectNumbers(const std::string& expression) noexcept -> bool {
-        for (size_t pos = 0; pos < expression.size(); ++pos) {
-            if (std::isdigit(expression[pos])) {
-                size_t endPos = pos + 1;
-                while (endPos < expression.size() && std::isdigit(expression[endPos])) {
-                    ++endPos;
+        if (expression[0] == '.' || expression[expression.size() - 1] == '.') {
+            m_message = "Incorrect number.";
+            return false;
+        }
+        bool numberHasDot = false;
+        for (size_t pos = 1; pos < expression.size() - 1; ++pos) {
+            if (expression[pos] == '.') {
+                if (numberHasDot) {
+                    m_message = "To many dots in number.";
+                    return false;
                 }
-                if (endPos < expression.size() && expression[endPos] == '.') {
-                    do {
-                        ++endPos;
-                    } while (endPos < expression.size() && std::isdigit(expression[endPos]));
-                    if (endPos < expression.size() && expression[endPos] == '.') {
-                        m_message = "Incorrect number.";
-                        return false;
-                    }
+                numberHasDot = true;
+                if (!std::isdigit(expression[pos - 1]) || !std::isdigit(expression[pos + 1])) {
+                    m_message = "Incorrect number.";
+                    return false;
                 }
-                pos = endPos - 1;
+            } else {
+                if (!std::isdigit(expression[pos])) {
+                    numberHasDot = false;
+                }
             }
         }
         return true;
