@@ -93,6 +93,8 @@ namespace Nummy {
                         subRoot = CalculatableMaker::makeNumber(value);
                     }
                     break;
+                default:
+                    break;
             }
         }
         return subRoot;

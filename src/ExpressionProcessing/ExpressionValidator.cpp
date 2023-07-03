@@ -147,7 +147,7 @@ namespace Nummy {
             return false;
         }
 
-        for (int i = 0; i < tokens.size() - 1; ++i) {
+        for (size_t i = 0; i < tokens.size() - 1; ++i) {
             if (tokens[i].type == TokenType::BinaryOperation && tokens[i + 1].type == TokenType::BinaryOperation) {
                 m_message = "Incorrect binary operation.";
                 return false;
