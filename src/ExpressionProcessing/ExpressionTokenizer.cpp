@@ -9,7 +9,8 @@ namespace Nummy {
     namespace {
 
         auto nextOperationCanNotBeBinary(const std::vector<Token>& tokens) -> bool {
-            return tokens.size() == 0 || tokens.back().name == ReservedSymbols::openBracket;
+            return tokens.size() == 0 || tokens.back().name == ReservedSymbols::openBracket ||
+                   tokens.back().type == TokenType::BinaryOperation;
         }
 
     }  // namespace
@@ -37,6 +38,9 @@ namespace Nummy {
             for (const auto& token : orderedValidTokenList) {
                 if (str.compare(pos, token.name.size(), token.name) == 0) {
                     if (token.type == TokenType::BinaryOperation && nextOperationCanNotBeBinary(tokens)) {
+                        continue;
+                    }
+                    if (token.type == TokenType::UnaryOperation && !nextOperationCanNotBeBinary(tokens)) {
                         continue;
                     }
                     tokens.push_back(token);
