@@ -87,4 +87,24 @@ namespace Nummy {
         EXPECT_NEAR(expected, actual, tolerance);
     }
 
+    TEST_F(CalculatableTreeTest, SeveralLevelsOfRecursiveCase) {
+        std::vector<Token> tokens = {
+            {"4", TokenType::Number         },
+            {"*", TokenType::BinaryOperation},
+            {"(", TokenType::OpenBracket    },
+            {"1", TokenType::Number         },
+            {"+", TokenType::BinaryOperation},
+            {"3", TokenType::Number         },
+            {")", TokenType::CloseBracket   },
+            {"^", TokenType::BinaryOperation},
+            {"2", TokenType::Number         },
+            {"-", TokenType::BinaryOperation},
+            {"1", TokenType::Number         },
+        };
+        tree.build(tokens);
+        double actual = tree.calculate();
+        double expected = 63.0;
+        EXPECT_NEAR(expected, actual, tolerance);
+    }
+
 }  // namespace Nummy

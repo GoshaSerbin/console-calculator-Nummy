@@ -2,7 +2,7 @@ add_executable(
     tests
     ExpressionTokenizer.cpp
     ExpressionValidator.cpp
-    Application.cpp
+    CalculatableTree.cpp
     ${PROJECT_SOURCE_DIR}/src/Calculatable/CalculatableMaker.cpp
     ${PROJECT_SOURCE_DIR}/src/Calculatable/CalculatableTree.cpp
     ${PROJECT_SOURCE_DIR}/src/Core/Application.cpp
