@@ -84,16 +84,16 @@ namespace Nummy {
             return tokens.size() == 0 || tokens.back().name == ReservedSymbols::openBracket;
         }
 
-        auto hasNumbers(const std::vector<Token>& tokens) -> bool {
-            return std::find_if(tokens.begin(), tokens.end(), [](const Token& token) { return token.type == TokenType::Number; }) !=
-                   tokens.end();
+        auto hasNumbersOrVariables(const std::vector<Token>& tokens) -> bool {
+            return std::find_if(tokens.begin(), tokens.end(), [](const Token& token) {
+                       return token.type == TokenType::Number || token.type == TokenType::Variable;
+                   }) != tokens.end();
         }
 
     }  // namespace
 
     auto ExpressionValidator::hasCorrectTokens(const std::string& expression, const std::vector<Token>& validTokenList) -> bool {
         std::string str = expression;
-        str.erase(std::remove_if(str.begin(), str.end(), ::isspace), str.end());
 
         auto orderedValidTokenList = validTokenList;
         std::sort(orderedValidTokenList.begin(), orderedValidTokenList.end(),
@@ -138,12 +138,12 @@ namespace Nummy {
                 pos = endPos;
             }
             if (tokens.size() == previosTokensSize) {
-                m_message = "Uknown token.";
+                m_message = "Uknown token at position " + std::to_string(pos) + ".";
                 return false;
             }
         }
 
-        if (!hasNumbers(tokens)) {
+        if (!hasNumbersOrVariables(tokens)) {
             m_message = "Expression does not have any numbers.";
             return false;
         }
