@@ -23,10 +23,10 @@ namespace Nummy {
         std::sort(orderedValidTokenList.begin(), orderedValidTokenList.end(),
                   [](const Token& l, const Token& r) { return l.name.size() > r.name.size(); });
 
-        size_t beginPos = str.find("=");
+        size_t beginPos = str.find(ReservedSymbols::assign);
         if (beginPos != std::string::npos) {
             tokens.emplace_back(str.substr(0, beginPos), TokenType::Variable);
-            tokens.emplace_back("=", TokenType::Asign);
+            tokens.emplace_back(ReservedSymbols::assign, TokenType::Asign);
             beginPos++;
 
         } else {
