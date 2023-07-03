@@ -11,6 +11,25 @@ namespace Nummy {
         m_root = buildWithPriority(0, leftTokens);
     }
 
+    namespace {
+
+        auto findRelatedCloseBracket(std::vector<Token>& tokens) -> std::vector<Nummy::Token>::iterator {
+            size_t count = 1;
+            std::vector<Nummy::Token>::iterator closeBracketIter = tokens.begin();
+            while (count != 0) {
+                if (closeBracketIter->type == TokenType::OpenBracket) {
+                    count++;
+                }
+                if (closeBracketIter->type == TokenType::CloseBracket) {
+                    count--;
+                }
+                closeBracketIter++;
+            }
+            return closeBracketIter;
+        }
+
+    }  // namespace
+
     auto CalculatableTree::buildWithPriority(OperationPriority priority, std::vector<Token>& leftTokens) -> ICalculatableUPtr {
         ICalculatableUPtr subRoot;
 
@@ -23,14 +42,17 @@ namespace Nummy {
                     subRoot = CalculatableMaker::makeNumber(std::stod(token.name));
                     break;
 
-                case TokenType::OpenBracket:
+                case TokenType::OpenBracket: {
                     leftTokens.erase(leftTokens.begin());
-                    subRoot = std::move(buildWithPriority(0, leftTokens));
+                    auto closeBracketIter = findRelatedCloseBracket(leftTokens);
+                    std::vector<Token> tokensInBrackets(leftTokens.begin(), closeBracketIter);
+                    subRoot = std::move(buildWithPriority(0, tokensInBrackets));
+                    leftTokens.erase(leftTokens.begin(), closeBracketIter);
                     break;
+                }
 
                 case TokenType::CloseBracket:
                     leftTokens.erase(leftTokens.begin());
-                    return subRoot;
                     break;
 
                 case TokenType::BinaryOperation: {
