@@ -51,7 +51,6 @@ namespace Nummy {
         return false;
     }
 
-    // incorrect algorithm
     auto ExpressionValidator::hasCorrectNumbers(const std::string& expression) noexcept -> bool {
         if (expression[0] == '.' || expression[expression.size() - 1] == '.') {
             m_message = "Incorrect number.";
