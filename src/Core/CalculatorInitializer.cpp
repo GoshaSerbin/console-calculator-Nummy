@@ -17,15 +17,16 @@ namespace Nummy {
 
     namespace {
 
-        const std::string helpMessage =
-            "-e = expression to calculate.\n-o = output. If not provided then std::cin. Otherwise name of output file.\nConsole Calculator "
-            "\"Nummy\".";
-
         const std::string helpKey = "--help";
         const std::string versionKey = "--version";
         const std::string inKey = "-i";
         const std::string outKey = "-o";
         const std::string expressionKey = "-e";
+
+        const std::string helpMessage = "Console calculator Nummy.\nUsage:\n" + expressionKey + " = expression to calculate.\n" + outKey +
+                                        " = output. If not provided then std::cout, otherwise name of output file.\n" + inKey +
+                                        " = input. If not provided then std::cin, otherwise name of input file. If " + expressionKey +
+                                        " presents then " + inKey + " not taken into account.\n";
 
     }  // namespace
 
