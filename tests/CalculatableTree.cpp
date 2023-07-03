@@ -80,6 +80,7 @@ namespace Nummy {
             {"1", TokenType::Number         },
             {")", TokenType::CloseBracket   },
             {")", TokenType::CloseBracket   },
+            {")", TokenType::CloseBracket   },
         };
         tree.build(tokens);
         double actual = tree.calculate();
