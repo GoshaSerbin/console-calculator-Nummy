@@ -1,5 +1,6 @@
 add_executable(
     tests
+    BasicCalculator.cpp
     ExpressionTokenizer.cpp
     ExpressionValidator.cpp
     CalculatableTree.cpp
@@ -16,6 +17,7 @@ add_executable(
 
 target_link_libraries(
     tests
+    gmock
     GTest::gtest_main
 )
 
