@@ -87,6 +87,36 @@ namespace Nummy {
         EXPECT_FALSE(actual);
     }
 
+    TEST_F(ExpressionValidatorTest, AssigningCorrectVariableCase) {
+        std::string expression("x=3");
+        bool actual = validator.isValid(expression, validTokenList);
+        EXPECT_TRUE(actual);
+    }
+
+    TEST_F(ExpressionValidatorTest, DoubleAssigningCorrectVariablesCase) {
+        std::string expression("x=y=3");
+        bool actual = validator.isValid(expression, validTokenList);
+        EXPECT_TRUE(actual);
+    }
+
+    TEST_F(ExpressionValidatorTest, AssigningIncorrectVariableNameCase) {
+        std::string expression("1=3");
+        bool actual = validator.isValid(expression, validTokenList);
+        EXPECT_FALSE(actual);
+    }
+
+    TEST_F(ExpressionValidatorTest, AssigningReservedNameCase) {
+        std::string expression("+=3");
+        bool actual = validator.isValid(expression, validTokenList);
+        EXPECT_FALSE(actual);
+    }
+
+    TEST_F(ExpressionValidatorTest, AssigningDotCase) {
+        std::string expression(".=3");
+        bool actual = validator.isValid(expression, validTokenList);
+        EXPECT_FALSE(actual);
+    }
+
     // TEST_F(ExpressionValidatorTest, FunctionsWithMsssingBracketsCase) {
     //     std::string expression("1+func_name345");
     //     bool actual = validator.isValid(expression, validTokenList);
