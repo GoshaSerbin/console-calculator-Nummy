@@ -89,31 +89,54 @@ namespace Nummy {
                    }) != tokens.end();
         }
 
+        auto isVariable(const std::string& name) -> bool {
+            if (name.empty()) {
+                return false;
+            }
+            for (const auto& token : reservedTokens) {
+                if (name.find(token.name) != std::string::npos) {
+                    return false;
+                }
+            }
+            if (name.find(".") != std::string::npos) {
+                return false;
+            }
+            if (std::all_of(name.begin(), name.end(), ::isdigit)) {
+                return false;
+            }
+            return true;
+        }
+
     }  // namespace
 
     auto ExpressionValidator::hasCorrectTokens(const std::string& expression, const std::vector<Token>& validTokenList) -> bool {
         std::string str = expression;
-
         auto orderedValidTokenList = validTokenList;
         std::sort(orderedValidTokenList.begin(), orderedValidTokenList.end(),
                   [](const Token& l, const Token& r) { return l.name.size() > r.name.size(); });
 
         std::vector<Token> tokens{};
-        size_t beginPos = str.find("=");
-        if (beginPos != std::string::npos) {
-            tokens.emplace_back(str.substr(0, beginPos), TokenType::Variable);
-            tokens.emplace_back("=", TokenType::Asign);
-            beginPos++;
-
-        } else {
-            beginPos = 0;
+        size_t assignPos = str.find(ReservedSymbols::assign);
+        while (assignPos != std::string::npos) {
+            std::string varName = str.substr(0, assignPos);
+            if (!isVariable(varName)) {
+                m_message = "Incorrect name of variable \'" + varName + "\'.";
+                return false;
+            }
+            tokens.emplace_back(varName, TokenType::Variable);
+            tokens.emplace_back(ReservedSymbols::assign, TokenType::Asign);
+            str.erase(0, assignPos + 1);
+            assignPos = str.find(ReservedSymbols::assign);
         }
 
-        for (size_t pos = beginPos; pos < str.size();) {
+        for (size_t pos = 0; pos < str.size();) {
             size_t previosTokensSize = tokens.size();
             for (const auto& token : orderedValidTokenList) {
                 if (str.compare(pos, token.name.size(), token.name) == 0) {
                     if (token.type == TokenType::BinaryOperation && nextOperationCanNotBeBinary(tokens)) {
+                        continue;
+                    }
+                    if (token.type == TokenType::UnaryOperation && !nextOperationCanNotBeBinary(tokens)) {
                         continue;
                     }
                     tokens.push_back(token);
