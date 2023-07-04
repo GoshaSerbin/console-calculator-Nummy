@@ -10,11 +10,12 @@ namespace Nummy {
         Success,
         Warning,
         Special,
+        Additional,
     };
 
     class IFormatter {
      public:
-        virtual auto formate(const std::string& message, MessageType type) -> std::string = 0;
+        virtual auto formate(std::string message, MessageType type) -> std::string = 0;
         virtual ~IFormatter() {}
     };
 

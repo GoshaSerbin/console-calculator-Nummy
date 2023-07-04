@@ -31,7 +31,7 @@ namespace Nummy {
 
     namespace {
 
-        const std::string welcomeMessage = "Welcome to Nummy!.";
+        const std::string welcomeMessage = "Welcome to Nummy!";
         const std::string exitCommand = "q";
 
         template <typename T>
@@ -44,10 +44,10 @@ namespace Nummy {
     }  // namespace
 
     auto FormatCalculator::run() -> void {
-        m_out << m_formatter->formate(welcomeMessage, MessageType::Success) << std::endl;
+        m_out << m_formatter->formate(welcomeMessage, MessageType::Special) << std::endl;
 
         static size_t commandCounter = 0;
-        m_out << m_formatter->formate(inputPrompt(commandCounter), MessageType::Default);
+        m_out << m_formatter->formate(inputPrompt(commandCounter), MessageType::Additional);
 
         std::string expression{};
         while (getline(m_in, expression)) {
@@ -55,8 +55,8 @@ namespace Nummy {
                 break;
             }
             if (m_validator && !m_validator->isValid(expression, m_tokensManager->getTokens())) {
-                m_out << m_formatter->formate(m_validator->getMessage(), MessageType::Error) << std::endl;
-                m_out << m_formatter->formate(inputPrompt(commandCounter), MessageType::Default);
+                m_out << m_formatter->formate(m_validator->getMessage(), MessageType::Error) << "\n\n";
+                m_out << m_formatter->formate(inputPrompt(commandCounter), MessageType::Additional);
                 continue;
             }
 
@@ -67,7 +67,7 @@ namespace Nummy {
             m_out << m_formatter->formate(outputPrompt(commandCounter), MessageType::Success)
                   << m_formatter->formate(toString(m_tree->calculate()), MessageType::Default) << std::endl;
             ++commandCounter;
-            m_out << std::endl << m_formatter->formate(inputPrompt(commandCounter), MessageType::Default);
+            m_out << std::endl << m_formatter->formate(inputPrompt(commandCounter), MessageType::Additional);
         }
     }
 
