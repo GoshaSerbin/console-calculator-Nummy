@@ -17,16 +17,10 @@ namespace Nummy {
           m_tokensManager(std::move(tokensManager)),
           m_variablesManager(std::move(variablesManager)) {}
 
-    namespace {
-
-        const std::string exitCommand = "q";
-
-    }  // namespace
-
     auto BasicCalculator::run() -> void {
         std::string expression{};
         while (getline(m_in, expression)) {
-            if (expression == exitCommand) {
+            if (expression == m_exitCommand) {
                 break;
             }
             if (m_validator && !m_validator->isValid(expression, m_tokensManager->getTokens())) {

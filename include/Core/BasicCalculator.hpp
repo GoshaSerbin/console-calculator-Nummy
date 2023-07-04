@@ -13,9 +13,14 @@
 namespace Nummy {
 
     /*!
-    \brief class gives basic functionality of calculator
+        \brief class gives basic functionality of calculator.
 
-    It can read input from std::istream, write output to any std::ostream. Variables can be added.
+        It can read input from std::istream, write output to std::ostream. It can work with variables. It will calculate expressions until
+       it meets m_exitCommand or until expressions are over. Results will be writen without any additional info.
+
+       \warning On invalid expression calculator will output info from IExpressionValidator and continue to calculate other expressions.
+
+       \warning If validator is nullptr, the calculator does not validate the expression.
     */
     class BasicCalculator : public ICalculator {
      public:
@@ -26,6 +31,7 @@ namespace Nummy {
                         std::unique_ptr<ICalculatableTree> tree,
                         std::unique_ptr<ITokensManager> tokensManager,
                         std::unique_ptr<IVariablesManager> variablesManager);
+
         virtual auto run() -> void override;
 
      protected:
@@ -39,6 +45,8 @@ namespace Nummy {
 
         std::unique_ptr<ITokensManager> m_tokensManager;
         std::unique_ptr<IVariablesManager> m_variablesManager;
+
+        std::string m_exitCommand{"q"};
     };
 
 }  // namespace Nummy

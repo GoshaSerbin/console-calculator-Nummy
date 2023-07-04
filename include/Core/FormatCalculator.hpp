@@ -4,7 +4,10 @@
 namespace Nummy {
 
     /*!
-        Basic calculator with formating
+        \brief Basic calculator with formating.
+
+        Adds input and output prompt (prefix). Depends on IFormatter. By default uses Formatter, but it can be changed via setFormatter
+       method.
     */
     class FormatCalculator : public BasicCalculator {
      public:
@@ -23,6 +26,7 @@ namespace Nummy {
      private:
         auto inputPrompt(size_t command) -> std::string;   /// prefix before typing command
         auto outputPrompt(size_t command) -> std::string;  /// prefix before typing command
+
         std::unique_ptr<IFormatter> m_formatter;
     };
 

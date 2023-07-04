@@ -32,7 +32,6 @@ namespace Nummy {
     namespace {
 
         const std::string welcomeMessage = "Welcome to Nummy!";
-        const std::string exitCommand = "q";
 
         template <typename T>
         std::string toString(T val) {
@@ -51,7 +50,7 @@ namespace Nummy {
 
         std::string expression{};
         while (getline(m_in, expression)) {
-            if (expression == exitCommand) {
+            if (expression == m_exitCommand) {
                 break;
             }
             if (m_validator && !m_validator->isValid(expression, m_tokensManager->getTokens())) {
