@@ -9,7 +9,6 @@ namespace Nummy {
         \warning Possibly some checks are missing.
 
         This validator checks some properties of the expression. See ExpressionValidator tests for examples.
-        \warning
     */
     class ExpressionValidator : public IExpressionValidator {
      public:
