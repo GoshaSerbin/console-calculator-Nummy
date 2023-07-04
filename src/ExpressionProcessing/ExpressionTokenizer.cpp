@@ -24,17 +24,16 @@ namespace Nummy {
         std::sort(orderedValidTokenList.begin(), orderedValidTokenList.end(),
                   [](const Token& l, const Token& r) { return l.name.size() > r.name.size(); });
 
-        size_t beginPos = str.find(ReservedSymbols::assign);
-        if (beginPos != std::string::npos) {
-            tokens.emplace_back(str.substr(0, beginPos), TokenType::Variable);
+        size_t assignPos = str.find(ReservedSymbols::assign);
+        while (assignPos != std::string::npos) {
+            std::string varName = str.substr(0, assignPos);
+            tokens.emplace_back(varName, TokenType::Variable);
             tokens.emplace_back(ReservedSymbols::assign, TokenType::Asign);
-            beginPos++;
-
-        } else {
-            beginPos = 0;
+            str.erase(0, assignPos + 1);
+            assignPos = str.find(ReservedSymbols::assign);
         }
 
-        for (size_t pos = beginPos; pos < str.size();) {
+        for (size_t pos = 0; pos < str.size();) {
             for (const auto& token : orderedValidTokenList) {
                 if (str.compare(pos, token.name.size(), token.name) == 0) {
                     if (token.type == TokenType::BinaryOperation && nextOperationCanNotBeBinary(tokens)) {
