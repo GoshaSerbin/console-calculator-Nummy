@@ -8,4 +8,5 @@ namespace Nummy {
      public:
         auto formate(std::string message, MessageType type) -> std::string override;
     };
+
 }  // namespace Nummy
