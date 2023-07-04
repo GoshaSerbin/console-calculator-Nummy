@@ -1,191 +1,94 @@
+---
 name: CI
-
 on:
-  push: 
+  push:
     branches:
       - main
-
 env:
-  BUILD_TYPE: Debug
+  build_type: Debug
 
-jobs:    
-
-  cppcheck:
-    runs-on: ubuntu-22.04
-
+jobs:
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.13
+      - name: Build
+        run: |
+          cmake -B build -DENABLE_TESTS=OFF -DENABLE_COVERAGE=OFF -DENABLE_SANITIZERS=OFF
+          cmake --build build
 
-      - name: Install cppcheck
-        uses: aminya/setup-cpp@v1
-        with:
-          cppcheck: true
-          cmake: true
-
-      - name: Run cppcheck
-        run: | 
-          cmake -DENABLE_CPPCHECK=ON . -B build
-          cmake --build build -t CPPCHECK_TARGET
-  
-  clang-tidy:
-    runs-on: ubuntu-22.04
-
+  cppcheck:  
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Install clang-tidy
-        uses: aminya/setup-cpp@v1
-        with:
-          gcc: true
-          clangtidy: true
-          cmake: true
-
-      - name: Run clang-tidy
-        run: | 
-          cmake -DENABLE_CLANG_TIDY=ON . -B build
-          cmake --build build -t TIDY_TARGET
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: c-linter
+        uses: deep5050/cppcheck-action@main
 
   clang-format:
-    runs-on: ubuntu-22.04
-
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      - name: Install clang-format
-        uses: aminya/setup-cpp@v1
+      - uses: DoozyX/clang-format-lint-action@v0.14
         with:
-          gcc: true
-          clangformat: true
-          cmake: true
+          source: 'src include tests'
+          extensions: 'h,cpp'
+          clangFormatVersion: 14
+          style: 'file:configs/.clang-format'
 
-      - name: Run clang-format
-        run: | 
-          cmake -DENABLE_CLANG_FORMAT=ON . -B build
-          cmake --build build -t FORMAT_CHECK_TARGET
-
-  build:
-    needs: [ cppcheck, clang-tidy, clang-format ]
-    runs-on: ubuntu-22.04
-
+  clang-tidy:
+    runs-on: ubuntu-latest
+    needs: build
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Install cmake
-        uses: aminya/setup-cpp@v1
-        with:
-          gcc: true
-          cmake: true
-
+      - name: Install clang-tidy
+        run: |
+          sudo apt-get update -y           
+          sudo apt-get install -y clang-tidy
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.13
       - name: Build
         run: |
-          cmake -DDEBUG=ON . -B build 
-          cmake --build build -t EXE_TARGET
-      
-  tests:
-    needs: [ build ]
-    runs-on: ubuntu-22.04
+          cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=True -DENABLE_TESTS=OFF -DENABLE_COVERAGE=OFF -DENABLE_SANITIZERS=OFF
+          cmake --build build
+      - name: Run clang-tidy
+        run: clang-tidy -checks=-*,clang-analyzer-*,-clang-analyzer-cplusplus* ./src/*.cpp ./include/*.hpp -p build
 
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install cmake
-        uses: aminya/setup-cpp@v1
-        with:
-          gcc: true
-          cmake: true
-
-
-      - name: Build
-        run: |
-          cmake -DDEBUG=ON -DENABLE_TESTING=ON . -B build 
-          cmake --build build -t TESTS_TARGET
-
-  test_with_sanitizers:
-    needs: [ tests ]
-    runs-on: ubuntu-22.04
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install cmake
-        uses: aminya/setup-cpp@v1
-        with:
-          gcc: true
-          cmake: true
-
-      - name: Run tests
-        run: |
-          cmake -DDEBUG=ON -DENABLE_TESTING=ON -DENABLE_SANITIZERS=ON . -B build 
-          cmake --build build -t TESTS_TARGET 
-
-  test_with_valgrind:
-    needs: [ tests ]  
-    runs-on: ubuntu-22.04
-    
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install cmake
-        uses: aminya/setup-cpp@v1
-        with:
-          gcc: true
-          cmake: true
-
-      - name: Install valgrind # Я не нашёл сценария который подгружает valgrind :(
-        run: | 
-          sudo apt-get update -y
-          sudo apt-get install -y valgrind  
-
-      - name: Run valgrind
-        run: |
-          cmake -DDEBUG=ON -DENABLE_TESTING=ON . -B build 
-          cmake --build build -t VALGRIND_TARGET
-
-  coverage_report:
-    needs: [ tests ]
-    runs-on: ubuntu-22.04
-
+  test:
     permissions: write-all
-
+    runs-on: ubuntu-latest
+    needs: build
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Install cmake
-        uses: aminya/setup-cpp@v1
-        with:
-          cmake: true
-          gcovr: true
-
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.13
+      - name: Build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Debug
+          cmake --build build
       - name: Run tests
         run: |
-          cmake -DDEBUG=ON -DENABLE_COVERAGE=ON . -B build 
-          cmake --build build -t TESTS_TARGET
-
-      - name: Generate detailed code coverage report
-        run: |
-          mkdir -p coverage_report
-          gcovr --exclude "googletest|tests|src/main.cpp" --exclude-throw-branches --xml ./coverage_report/coverage.xml
-      
-      - name: Generate coverage report for PR comment
-        run: gcovr --exclude "googletest|tests|src/main.cpp" --exclude-throw-branches --html-details coverage_report/main.html
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Code_coverage_report
-          path: coverage_report 
-              
+          ctest --output-on-failure --repeat-until-fail 10 --test-dir ./build/tests
+          sudo apt-get update -y           
+          sudo apt-get install -y gcovr
+          gcovr -e '.*test*' -x >> cover.xml
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: ./coverage_report/coverage.xml
+          filename: cover.xml
           badge: true
-          fail_below_min: false
+          fail_below_min: true
           format: markdown
           hide_branch_rate: false
           hide_complexity: false
           indicators: true
           output: both
-          thresholds: '70 90'
+          thresholds: '60 80'
 
       - uses: jwalton/gh-find-current-pr@v1
         id: finder
@@ -194,3 +97,4 @@ jobs:
           number: ${{ steps.finder.outputs.pr }}
           recreate: true
           path: code-coverage-results.md
+          
