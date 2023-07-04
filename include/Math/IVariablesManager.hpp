@@ -5,7 +5,7 @@
 namespace Nummy {
 
     /*!
-    \brief class is responsable for working with Variables
+    \brief class is responsable for working with variables
 
 
     */

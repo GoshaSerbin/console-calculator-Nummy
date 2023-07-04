@@ -5,6 +5,7 @@
 
 namespace Nummy {
 
+    /// \todo Functions support are not implemented yet.
     enum class TokenType {
         Number,
         UnaryOperation,
@@ -16,6 +17,7 @@ namespace Nummy {
         Function
     };
 
+    /// \brief Basic element of any expression.
     class Token {
      public:
         Token(const std::string& name, TokenType type) : name(name), type(type){};

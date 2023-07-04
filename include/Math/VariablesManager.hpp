@@ -7,6 +7,15 @@
 
 namespace Nummy {
 
+    /*!
+    \brief Realization of IVariablesManager.
+
+    setVariable method can be used both when creating new variable and reseting its value. When variable is created VariableManager calls
+    addToken method of m_tokenManager
+
+    \warning getVariable method does not check existence of requested variable.
+
+    */
     class VariablesManager : public IVariablesManager {
      public:
         VariablesManager(ITokensManager& tokensManager);

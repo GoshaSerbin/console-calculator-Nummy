@@ -1,8 +1,8 @@
 /*!
-\file
-\brief Header file with constants.
+    \file
+    \brief Header file with constants.
 
-This header file contains reserved mathematical symbols, default valid tokens, default mathematical constants, operation priorities.
+    This header file contains reserved mathematical symbols, default valid tokens, default mathematical constants, operation priorities.
 */
 
 #pragma once
@@ -57,7 +57,7 @@ namespace Nummy {
 
     using OperationPriority = int;
 
-    /// The higher the number means that operation will calculate earlier
+    /// The higher number means that operation will be calculated earlier
     inline const std::unordered_map<std::string, OperationPriority> operationsPriority{
         {ReservedSymbols::plus,         1},
         {ReservedSymbols::minus,        1},
