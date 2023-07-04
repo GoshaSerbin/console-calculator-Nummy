@@ -1,11 +1,11 @@
-// TO DO: make other class argument parser
-// check correction of arguments
+// to do: validate command arguments
 
 #include "CalculatorInitializer.hpp"
 #include "BasicCalculator.hpp"
 #include "CalculatableTree.hpp"
 #include "ExpressionTokenizer.hpp"
 #include "ExpressionValidator.hpp"
+#include "FormatCalculator.hpp"
 #include "ProjectParameters.hpp"
 #include "TokensManager.hpp"
 #include "VariablesManager.hpp"
@@ -22,11 +22,14 @@ namespace Nummy {
         const std::string inKey = "-i";
         const std::string outKey = "-o";
         const std::string expressionKey = "-e";
+        const std::string formatKey = "-f";
 
         const std::string helpMessage = "Console calculator Nummy.\nUsage:\n" + expressionKey + " = expression to calculate.\n" + outKey +
                                         " = output. If not provided then std::cout, otherwise name of output file.\n" + inKey +
                                         " = input. If not provided then std::cin, otherwise name of input file. If " + expressionKey +
-                                        " presents then " + inKey + " not taken into account.\n";
+                                        " presents then " + inKey + " not taken into account.\n" + formatKey +
+                                        " = format of calculator. If not provided then basic, if  " + formatKey +
+                                        " = full, then formatCalculator is used.\n";
 
     }  // namespace
 
@@ -82,8 +85,15 @@ namespace Nummy {
             calculatorIn = &in;
         }
 
-        return std::make_unique<BasicCalculator>(*calculatorIn, *calculatorOut, std::move(validator), std::move(tokenizer), std::move(tree),
-                                                 std::move(tokensManager), std::move(variablesManager));
+        if (args.contains(formatKey)) {
+            return std::make_unique<FormatCalculator>(*calculatorIn, *calculatorOut, std::move(validator), std::move(tokenizer),
+                                                      std::move(tree), std::move(tokensManager), std::move(variablesManager));
+        } else {
+            return std::make_unique<BasicCalculator>(*calculatorIn, *calculatorOut, std::move(validator), std::move(tokenizer),
+                                                     std::move(tree), std::move(tokensManager), std::move(variablesManager));
+        }
+
+        return {};
     }
 
 }  // namespace Nummy

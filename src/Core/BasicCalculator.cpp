@@ -19,7 +19,6 @@ namespace Nummy {
 
     namespace {
 
-        const std::string welcomeMessage = "Hello!.";
         const std::string exitCommand = "q";
 
     }  // namespace

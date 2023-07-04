@@ -12,8 +12,10 @@ set(SOURCES
     src/Core/Application.cpp
     src/Core/BasicCalculator.cpp
     src/Core/CalculatorInitializer.cpp
+    src/Core/FormatCalculator.cpp
     src/ExpressionProcessing/ExpressionTokenizer.cpp
     src/ExpressionProcessing/ExpressionValidator.cpp
+    src/Formatter/Formatter.cpp
     src/Math/TokensManager.cpp
     src/Math/VariablesManager.cpp
     src/main.cpp)
@@ -22,6 +24,7 @@ set(INCLUDES
     include/Calculatable
     include/Core
     include/ExpressionProcessing
+    include/Formatter
     include/Math)
 
 include_directories(${INCLUDES} ${PROJECT_BINARY_DIR})

@@ -9,8 +9,10 @@ add_executable(
     ${PROJECT_SOURCE_DIR}/src/Core/Application.cpp
     ${PROJECT_SOURCE_DIR}/src/Core/BasicCalculator.cpp
     ${PROJECT_SOURCE_DIR}/src/Core/CalculatorInitializer.cpp
+    ${PROJECT_SOURCE_DIR}/src/Core/FormatCalculator.cpp
     ${PROJECT_SOURCE_DIR}/src/ExpressionProcessing/ExpressionTokenizer.cpp
     ${PROJECT_SOURCE_DIR}/src/ExpressionProcessing/ExpressionValidator.cpp
+    ${PROJECT_SOURCE_DIR}/src/Formatter/Formatter.cpp
     ${PROJECT_SOURCE_DIR}/src/Math/TokensManager.cpp
     ${PROJECT_SOURCE_DIR}/src/Math/VariablesManager.cpp
 )
