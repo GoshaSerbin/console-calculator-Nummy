@@ -56,7 +56,7 @@ jobs:
           cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=True -DENABLE_TESTS=OFF -DENABLE_COVERAGE=OFF -DENABLE_SANITIZERS=OFF
           cmake --build build
       - name: Run clang-tidy
-        run: clang-tidy -checks=-*,clang-analyzer-*,-clang-analyzer-cplusplus* ./src/*.cpp ./include/*.hpp -p build
+        run: clang-tidy -checks=-*,clang-analyzer-*,-clang-analyzer-cplusplus* ../src/*.cpp ../include/*.hpp -p build
 
   test:
     permissions: write-all
@@ -76,7 +76,7 @@ jobs:
           ctest --output-on-failure --repeat-until-fail 10 --test-dir ./build/tests
           sudo apt-get update -y           
           sudo apt-get install -y gcovr
-          gcovr -e '.*test*' -x >> cover.xml
+          gcovr -e '.*tests*' -x >> cover.xml
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
@@ -97,4 +97,3 @@ jobs:
           number: ${{ steps.finder.outputs.pr }}
           recreate: true
           path: code-coverage-results.md
-          
