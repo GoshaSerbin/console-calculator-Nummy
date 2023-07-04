@@ -177,6 +177,11 @@ namespace Nummy {
             }
         }
 
+        if (tokens.back().type == TokenType::BinaryOperation) {
+            m_message = "Incorrect binary operation at the end.";
+            return false;
+        }
+
         return true;
     }
 
