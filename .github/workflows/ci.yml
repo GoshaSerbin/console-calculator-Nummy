@@ -41,22 +41,18 @@ jobs:
 
   clang-tidy:
     runs-on: ubuntu-latest
-    needs: build
     steps:
-      - name: Install clang-tidy
-        run: |
-          sudo apt-get update -y           
-          sudo apt-get install -y clang-tidy
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v1.13
-      - name: Build
-        run: |
-          cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=True -DENABLE_TESTS=OFF -DENABLE_COVERAGE=OFF -DENABLE_SANITIZERS=OFF
-          cmake --build build
-      - name: Run clang-tidy
-        run: clang-tidy -checks=-*,clang-analyzer-*,-clang-analyzer-cplusplus* src/*.cpp include/*.hpp -p build
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Clang
+      uses: actions/setup-clang@v1
+      with:
+        llvm-version: '12'
+
+    - name: Build and run clang-tidy
+      run: |
+        clang-tidy src/*.cpp include/*.hpp -- -std=c++11
 
   test:
     permissions: write-all
