@@ -19,7 +19,9 @@ add_executable(
 
 target_link_libraries(
     tests
+    gtest
     gmock
+    gcov
     GTest::gtest_main
 )
 

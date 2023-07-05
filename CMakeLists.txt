@@ -37,7 +37,6 @@ if(ENABLE_TESTS)
     enable_testing()
     find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS})
-
     add_subdirectory(tests)
 endif()
 
@@ -53,6 +52,12 @@ option(ENABLE_SANITIZERS "Enable sanitizers" TRUE)
 if(ENABLE_SANITIZERS)
     add_compile_options(-fsanitize=address -fsanitize=leak -fsanitize=undefined)
     add_link_options(-fsanitize=address -fsanitize=leak -fsanitize=undefined)
+endif()
+
+if(ENABLE_COVERAGE OR ENABLE_SANITIZERS OR ENABLE_TESTS)
+    add_compile_options(-g -O0)
+elseif()
+    add_compile_options(-Ofast)
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCES})
