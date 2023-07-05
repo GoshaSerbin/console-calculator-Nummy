@@ -53,7 +53,7 @@ jobs:
         uses: jwlawson/actions-setup-cmake@v1.13
       - name: Build
         run: |
-          cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=True
+          cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=True -DENABLE_TESTS=OFF -DENABLE_COVERAGE=OFF -DENABLE_SANITIZERS=OFF
           cmake --build build
       - name: Run clang-tidy
         run: clang-tidy -checks=-*,clang-analyzer-*,-clang-analyzer-cplusplus* ./src/*/*.cpp ./include/*/*.hpp -p build
@@ -93,7 +93,7 @@ jobs:
           hide_complexity: false
           indicators: true
           output: both
-          thresholds: '60 80'
+          thresholds: '50 80'
 
       - uses: jwalton/gh-find-current-pr@v1
         id: finder

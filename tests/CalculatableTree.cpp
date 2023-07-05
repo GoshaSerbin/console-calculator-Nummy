@@ -51,17 +51,36 @@ namespace Nummy {
         EXPECT_NEAR(expected, actual, tolerance);
     }
 
-    TEST_F(CalculatableTreeTest, BracketsWithUnaryMinusCase) {
+    TEST_F(CalculatableTreeTest, BracketsWithUnaryMinusAndPlusCase) {
         std::vector<Token> tokens = {
             {"-", TokenType::UnaryOperation},
             {"(", TokenType::OpenBracket   },
-            {"-", TokenType::UnaryOperation},
+            {"+", TokenType::UnaryOperation},
             {"2", TokenType::Number        },
             {")", TokenType::CloseBracket  },
         };
         tree.build(tokens);
         double actual = tree.calculate();
-        double expected = 2.0;
+        double expected = -2.0;
+        EXPECT_NEAR(expected, actual, tolerance);
+    }
+
+    TEST_F(CalculatableTreeTest, UnaryFunctionsCase) {
+        std::vector<Token> tokens = {
+            {"atan", TokenType::UnaryOperation},
+            {"(",    TokenType::OpenBracket   },
+            {"abs",  TokenType::UnaryOperation},
+            {"(",    TokenType::OpenBracket   },
+            {"sqrt", TokenType::UnaryOperation},
+            {"(",    TokenType::OpenBracket   },
+            {"0",    TokenType::Number        },
+            {")",    TokenType::CloseBracket  },
+            {")",    TokenType::CloseBracket  },
+            {")",    TokenType::CloseBracket  },
+        };
+        tree.build(tokens);
+        double actual = tree.calculate();
+        double expected = 0.0;
         EXPECT_NEAR(expected, actual, tolerance);
     }
 

@@ -32,32 +32,30 @@ include_directories(${INCLUDES} ${PROJECT_BINARY_DIR})
 configure_file(ProjectParameters.hpp.in ProjectParameters.hpp)
 
 option(ENABLE_TESTS "Enable tests" TRUE)
-
-if(ENABLE_TESTS)
-    enable_testing()
-    find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
-    add_subdirectory(tests)
-endif()
-
 option(ENABLE_COVERAGE "Enable coverage" TRUE)
+option(ENABLE_SANITIZERS "Enable sanitizers" TRUE)
+
+if(ENABLE_COVERAGE OR ENABLE_SANITIZERS OR ENABLE_TESTS)
+    add_compile_options(-g -O0)
+elseif()
+    add_compile_options(-Ofast)
+endif()
 
 if(ENABLE_COVERAGE)
     add_compile_options(--coverage)
     add_link_options(--coverage)
 endif()
 
-option(ENABLE_SANITIZERS "Enable sanitizers" TRUE)
-
 if(ENABLE_SANITIZERS)
     add_compile_options(-fsanitize=address -fsanitize=leak -fsanitize=undefined)
     add_link_options(-fsanitize=address -fsanitize=leak -fsanitize=undefined)
 endif()
 
-if(ENABLE_COVERAGE OR ENABLE_SANITIZERS OR ENABLE_TESTS)
-    add_compile_options(-g -O0)
-elseif()
-    add_compile_options(-Ofast)
+if(ENABLE_TESTS)
+    enable_testing()
+    find_package(GTest REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS})
+    add_subdirectory(tests)
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCES})
