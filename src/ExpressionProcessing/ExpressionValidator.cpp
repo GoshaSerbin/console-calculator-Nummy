@@ -1,6 +1,8 @@
 #include "ExpressionValidator.hpp"
 #include "MathDictionary.hpp"
 
+#include <algorithm>
+
 namespace Nummy {
 
     auto ExpressionValidator::isValid(std::string expression, const std::vector<Token>& validTokenList) -> bool {
